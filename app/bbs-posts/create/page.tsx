@@ -3,9 +3,11 @@
 import { Button } from '@/components/ui/button'
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import React from 'react'
-import { Form, useForm } from 'react-hook-form'
+import { Form, FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 const formSchema = z.object({
@@ -13,10 +15,12 @@ const formSchema = z.object({
 	title: z.string().min(2,{message:"タイトルは10文字以上で"}),
 	content: z.string()
 		.min(2,{message:"本文はは10文字以上で"})
-		.max(2,{message:"本文はは140文字以内で"}),
+		.max(140,{message:"本文はは140文字以内で"}),
 });
 
 const CreateBBSPage = () => {
+
+	const router = useRouter();
 
 	const form = useForm({
 		resolver: zodResolver(formSchema),
@@ -27,32 +31,73 @@ const CreateBBSPage = () => {
 		}
 	});
 
-	async function onSubmit() {
-		
+	async function onSubmit(value: z.infer<typeof formSchema>) {
+		const {username, title, content } = value;
+		try {
+			await fetch("http://localhost:3000/api/post", {
+				method: "POST",
+				headers: {
+					"Content-Type" : "application/json",
+				},
+				body: JSON.stringify({username, title, content})
+			});
+			router.push("/")
+		} catch (err) { 
+			console.error(err)
+		}
 	}
 
 	return (
-		<Form {...form}>
+		<FormProvider {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				<FormField
+			<FormField
 					control={form.control}
 					name="username"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Username</FormLabel>
+							<FormLabel></FormLabel>
 							<FormControl>
-								<Input placeholder="shadcn" {...field} />
+								<Input placeholder="ユーザー名" {...field} />
 							</FormControl>
-							<FormDescription>
-								This is your public display name.
-							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+			<FormField
+					control={form.control}
+					name="title"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>タイトル</FormLabel>
+							<FormControl>
+								<Input placeholder="タイトル" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="content"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>本文</FormLabel>
+							<FormControl>
+								<Textarea
+									placeholder='投稿内容'
+									className='resize-none'
+									{...field}
+								/>
+							</FormControl>
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
 				<Button type="submit">Submit</Button>
 			</form>
-		</Form>
+		</FormProvider>
 	)
 }
 

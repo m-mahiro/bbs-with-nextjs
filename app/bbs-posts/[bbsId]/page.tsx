@@ -19,7 +19,8 @@ async function getDetailBBSData(id: number) {
 
 
 const BBSDetailPage = async ({ params }: { params: { bbsId: number } }) => {
-	const bbsDetailData = await getDetailBBSData(params.bbsId);
+	const {bbsId} = await params;
+	const bbsDetailData = await getDetailBBSData(bbsId);
 	const {title, content, username} = bbsDetailData;
 	return (
 		<div className='mx-auto max-w-4x1 p-4'>

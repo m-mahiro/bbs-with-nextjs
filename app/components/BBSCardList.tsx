@@ -11,18 +11,21 @@ import {
 } from "@/components/ui/card"
 import Link from "next/link";
 import BBSCard from './BBSCard';
+import { BBSData } from '../types/types';
 
 type CardProps = React.ComponentProps<typeof Card>
 
+interface BBSAllDataProps {
+	bbsAllData: BBSData[];
+}
 
 
-const BBSCardList = () => {
+const BBSCardList = ({bbsAllData}: BBSAllDataProps) => {
 	return (
 		<div  className="grid lg:grid-cols-3 px-4 py-4">
-			<BBSCard/>
-			<BBSCard/>
-			<BBSCard/>
-			<BBSCard/>
+			{bbsAllData.map((bbsData:BBSData) => (
+				<BBSCard key={bbsData.id} bbsData = {bbsData}/>
+			))}
 		</div>
 	)
 }

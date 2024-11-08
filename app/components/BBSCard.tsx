@@ -10,24 +10,31 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import Link from "next/link";
+import { BBSData } from '../types/types';
 
 type CardProps = React.ComponentProps<typeof Card>
 
-const BBSCard = () => {
+interface BBSDataProps {
+  bbsData: BBSData
+}
+
+const BBSCard = ({bbsData}:BBSDataProps) => {
+  const { id, title, content, createdAt, username } = bbsData;
+
 	return (
 		<div>
 			<Card>
         <CardHeader>
-          <CardTitle>Create project</CardTitle>
+          <CardTitle>{title}</CardTitle>
           <CardDescription>
-            Deploy your new project in one-cilck.
+            {username}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Odit consectetur, ullam est omnis nihil iusto illo similique id dolore debitis quidem maxime, dolores doloremque ipsa voluptas veniam enim cumque sapiente.
+          {content}
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Link href={"/bbs-post/1"} className="text-blue-500">Read More</Link>
+          <Link href={`/bbs-posts/${id}`} className="text-blue-500">Read More</Link>
         </CardFooter>
       </Card>
 

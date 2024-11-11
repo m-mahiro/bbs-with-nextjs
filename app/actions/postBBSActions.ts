@@ -5,6 +5,7 @@ import { formSchema } from "../bbs-posts/create/page";
 import prisma from "@/lib/prismaClient";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { buildStaticPaths } from "next/dist/build/utils";
 
 export const postBBS = async ({
 	username, 
@@ -21,4 +22,38 @@ export const postBBS = async ({
 
 	revalidatePath("/");
 	redirect("/");
+}
+
+export const updateBBS = async ({
+		username, 
+		title, 
+		content
+	}: z.infer<typeof formSchema>,
+	bbsId: string
+) => {
+	await prisma.post.update({
+		data: {
+			username,
+			title,
+			content,
+		},
+		where: {
+			id: parseInt(bbsId)
+		}
+	})
+
+	revalidatePath("/");
+	redirect("/");
+
+}
+
+export const deleteBBS = async (bbsId: string) => {
+	await prisma.post.delete({
+		where: {
+			id: parseInt(bbsId)
+		}
+	})
+	revalidatePath("/");
+	redirect("/");
+
 }

@@ -14,11 +14,11 @@ import { BBSData } from '../types/types';
 
 type CardProps = React.ComponentProps<typeof Card>
 
-interface BBSDataProps {
+interface BBSDataProp {
   bbsData: BBSData
 }
 
-const BBSCard = ({bbsData}:BBSDataProps) => {
+const BBSCard = ({bbsData}:BBSDataProp) => {
   const { id, title, content, createdAt, username } = bbsData;
 
 	return (

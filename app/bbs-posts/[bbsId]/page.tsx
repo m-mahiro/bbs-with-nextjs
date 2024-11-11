@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react'
 
 
-async function getDetailBBSData(id: number) {
+export async function getDetailBBSData(id: number) {
 
 	const response = await fetch(`http://localhost:3000/api/post/${id}`, {
 		cache: "no-store", //SSR
@@ -35,6 +35,9 @@ const BBSDetailPage = async ({ params }: { params: { bbsId: number } }) => {
 
 			<Link href = {"/"} className="bg-blue-500 text-white font-bold py-2 px-4 rounded-md">
 				戻る
+			</Link>
+			<Link href = {`/bbs-posts/${bbsId}/edit`} className='bg-green-500 text-white font-bold py-2 px-4 rounded-md ml-4'>
+				編集
 			</Link>
 		</div>
 	)
